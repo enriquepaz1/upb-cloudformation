@@ -4,4 +4,4 @@ Resources:
     MyBucket:
         Type: AWS::S3::Bucket
         Properties:
-            BucketName: my-unique-S3-bucket-name
+            BucketName: my-unique-s3-bucket-name123
