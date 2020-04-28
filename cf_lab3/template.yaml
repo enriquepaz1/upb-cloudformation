@@ -1,3 +1,4 @@
+  
 AWSTemplateFormatVersion : '2010-09-09'
 Transform:
   - AWS::Serverless-2016-10-31
@@ -11,7 +12,7 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: my-lambda-role
+      RoleName: my-lambda-role3
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -45,10 +46,10 @@ Resources:
           Parameters:
             Location: swagger.yaml
 
-  MyLambda1:
+  GetUserLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: my-lambda-1
+      FunctionName: get-user-lambda
       Runtime: python3.6
       CodeUri: ./build
       Handler: lambda1.handler
@@ -66,14 +67,37 @@ Resources:
             Path: /users
             Method: GET
   
-  MyLambda2:
+  GetUserLambda2:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Join [ "-", [!Ref Project, "lambda-1" ] ]  
+      FunctionName: get-user-lambda2
       Runtime: python3.6
       CodeUri: ./build
       Handler: lambda2.handler
       Role: !GetAtt MyLambdaRole.Arn
+      Events:
+        GetUsers2:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: /users/{user_name}
+            Method: GET
+  
+  PostLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: post-lambda
+      Runtime: python3.6
+      CodeUri: ./build
+      Handler: lambda3.handler
+      Role: !GetAtt MyLambdaRole.Arn
+      Events:
+        PostUsers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: /users/{user_name}
+            Method: POST
 
 Outputs:
   RoleARN:
